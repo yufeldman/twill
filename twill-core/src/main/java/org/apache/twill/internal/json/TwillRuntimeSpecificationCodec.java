@@ -45,6 +45,7 @@ final class TwillRuntimeSpecificationCodec implements JsonSerializer<TwillRuntim
   private static final String TWILL_RUNID = "twillRunId";
   private static final String TWILL_APP_NAME = "twillAppName";
   private static final String RESERVED_MEMORY = "reservedMemory";
+  private static final String HEAP_TO_RESERVED_RATIO = "heapToReservedRatio";
   private static final String RM_SCHEDULER_ADDR = "rmSchedulerAddr";
   private static final String TWILL_SPEC = "twillSpecification";
   private static final String LOG_LEVELS = "logLevels";
@@ -59,6 +60,9 @@ final class TwillRuntimeSpecificationCodec implements JsonSerializer<TwillRuntim
     json.addProperty(TWILL_RUNID, src.getTwillAppRunId().getId());
     json.addProperty(TWILL_APP_NAME, src.getTwillAppName());
     json.addProperty(RESERVED_MEMORY, src.getReservedMemory());
+    if (src.getHeapToReserveRatio() != null) {
+      json.addProperty(HEAP_TO_RESERVED_RATIO, src.getHeapToReserveRatio());
+    }
     if (src.getRmSchedulerAddr() != null) {
       json.addProperty(RM_SCHEDULER_ADDR, src.getRmSchedulerAddr());
     }
@@ -94,6 +98,8 @@ final class TwillRuntimeSpecificationCodec implements JsonSerializer<TwillRuntim
                                          jsonObj.has(RM_SCHEDULER_ADDR) ?
                                          jsonObj.get(RM_SCHEDULER_ADDR).getAsString() : null,
                                          logLevels,
-                                         maxRetries);
+                                         maxRetries,
+                                         jsonObj.has(HEAP_TO_RESERVED_RATIO) ?
+                                         jsonObj.get(HEAP_TO_RESERVED_RATIO).getAsDouble() : null);
   }
 }

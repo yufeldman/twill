@@ -41,11 +41,23 @@ public class TwillRuntimeSpecification {
   private final String rmSchedulerAddr;
   private final Map<String, Map<String, String>> logLevels;
   private final Map<String, Integer> maxRetries;
+  private Double heapToReserveRatio;
 
   public TwillRuntimeSpecification(TwillSpecification twillSpecification, String fsUser, URI twillAppDir,
                                    String zkConnectStr, RunId twillRunId, String twillAppName,
                                    int reservedMemory, @Nullable String rmSchedulerAddr,
                                    Map<String, Map<String, String>> logLevels, Map<String, Integer> maxRetries) {
+    this(twillSpecification, fsUser, twillAppDir,
+            zkConnectStr, twillRunId, twillAppName,
+    reservedMemory, rmSchedulerAddr,
+    logLevels, maxRetries, null);
+  }
+
+  public TwillRuntimeSpecification(TwillSpecification twillSpecification, String fsUser, URI twillAppDir,
+                                   String zkConnectStr, RunId twillRunId, String twillAppName,
+                                   int reservedMemory, @Nullable String rmSchedulerAddr,
+                                   Map<String, Map<String, String>> logLevels, Map<String, Integer> maxRetries,
+                                   Double heapToReserveRatio) {
     this.twillSpecification = twillSpecification;
     this.fsUser = fsUser;
     this.twillAppDir = twillAppDir;
@@ -56,6 +68,7 @@ public class TwillRuntimeSpecification {
     this.rmSchedulerAddr = rmSchedulerAddr;
     this.logLevels = logLevels;
     this.maxRetries = maxRetries;
+    this.heapToReserveRatio = heapToReserveRatio;
   }
 
   public TwillSpecification getTwillSpecification() {
@@ -84,6 +97,10 @@ public class TwillRuntimeSpecification {
 
   public int getReservedMemory() {
     return reservedMemory;
+  }
+
+  public Double getHeapToReserveRatio() {
+    return heapToReserveRatio;
   }
 
   @Nullable

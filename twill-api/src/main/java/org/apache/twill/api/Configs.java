@@ -17,6 +17,8 @@
  */
 package org.apache.twill.api;
 
+import org.apache.twill.internal.Constants;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,6 +34,11 @@ public final class Configs {
      * Size in MB of reserved memory for Java process (non-heap memory).
      */
     public static final String JAVA_RESERVED_MEMORY_MB = "twill.java.reserved.memory.mb";
+
+    /**
+     * Configurable ratio between Heap and Reserved Memory
+     */
+    public static final String HEAP_RESERVED_MIN_RATIO_CONFIG = "twill.java.reserved.memory.ratio";
 
     /**
      * Set this to false to disable the secure store updates done by default.
@@ -75,6 +82,7 @@ public final class Configs {
      */
     public static final int JAVA_RESERVED_MEMORY_MB = 200;
 
+    public static final double HEAP_RESERVED_MIN_RATIO_DEFAULT = Constants.HEAP_MIN_RATIO;
     /**
      * Default use the system temp directory for local staging files.
      */
