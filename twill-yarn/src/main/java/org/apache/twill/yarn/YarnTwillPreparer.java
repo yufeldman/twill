@@ -129,6 +129,7 @@ final class YarnTwillPreparer implements TwillPreparer {
   private final List<String> applicationClassPaths = Lists.newArrayList();
   private final Credentials credentials;
   private final int reservedMemory;
+  private final Double heapToReserveRatio;
   private String schedulerQueue;
   private String extraOptions;
   private JvmOptions.DebugOptions debugOptions = JvmOptions.DebugOptions.NO_DEBUG;
@@ -149,6 +150,9 @@ final class YarnTwillPreparer implements TwillPreparer {
     this.credentials = createCredentials();
     this.reservedMemory = yarnConfig.getInt(Configs.Keys.JAVA_RESERVED_MEMORY_MB,
                                             Configs.Defaults.JAVA_RESERVED_MEMORY_MB);
+    this.heapToReserveRatio = yarnConfig.getDouble(Configs.Keys.HEAP_RESERVED_MIN_RATIO_CONFIG,
+            Configs.Defaults.HEAP_RESERVED_MIN_RATIO_DEFAULT);
+
     this.extraOptions = extraOptions;
     this.logLevel = logLevel;
     this.classAcceptor = new ClassAcceptor();
@@ -343,6 +347,7 @@ final class YarnTwillPreparer implements TwillPreparer {
             .put(EnvKeys.TWILL_ZK_CONNECT, zkConnectString)
             .put(EnvKeys.TWILL_RUN_ID, runId.getId())
             .put(EnvKeys.TWILL_RESERVED_MEMORY_MB, Integer.toString(reservedMemory))
+            .put(EnvKeys.TWILL_HEAP_RESERVED_MIN_RATIO, heapToReserveRatio.toString())
             .put(EnvKeys.TWILL_APP_NAME, twillSpec.getName())
             .put(EnvKeys.YARN_RM_SCHEDULER_ADDRESS, yarnConfig.get(YarnConfiguration.RM_SCHEDULER_ADDRESS));
 

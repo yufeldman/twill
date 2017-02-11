@@ -83,6 +83,7 @@ import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -100,7 +101,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nullable;
 
 /**
  * The class that acts as {@code ApplicationMaster} for Twill applications.
@@ -122,6 +122,7 @@ public final class ApplicationMasterService extends AbstractYarnTwillService imp
   private final YarnAMClient amClient;
   private final JvmOptions jvmOpts;
   private final int reservedMemory;
+  private final Double heapToReserveRatio;
   private final EventHandler eventHandler;
   private final Location applicationLocation;
   private final PlacementPolicyManager placementPolicyManager;
@@ -143,6 +144,7 @@ public final class ApplicationMasterService extends AbstractYarnTwillService imp
     this.credentials = createCredentials();
     this.jvmOpts = loadJvmOptions();
     this.reservedMemory = getReservedMemory();
+    this.heapToReserveRatio = getHeapToReserveRatio();
     this.placementPolicyManager = new PlacementPolicyManager(twillSpec.getPlacementPolicies());
     this.environments = getEnvironments();
 
@@ -179,6 +181,19 @@ public final class ApplicationMasterService extends AbstractYarnTwillService imp
       return Configs.Defaults.JAVA_RESERVED_MEMORY_MB;
     }
   }
+
+  private Double getHeapToReserveRatio() {
+    String value = System.getenv(EnvKeys.TWILL_HEAP_RESERVED_MIN_RATIO);
+    if (value == null) {
+      return Configs.Defaults.HEAP_RESERVED_MIN_RATIO_DEFAULT;
+    }
+    try {
+      return Double.valueOf(value);
+    } catch (Exception e) {
+      return Configs.Defaults.HEAP_RESERVED_MIN_RATIO_DEFAULT;
+    }
+  }
+
 
   @SuppressWarnings("unchecked")
   @Nullable
@@ -680,7 +695,7 @@ public final class ApplicationMasterService extends AbstractYarnTwillService imp
       TwillContainerLauncher launcher = new TwillContainerLauncher(
         twillSpec.getRunnables().get(runnableName), processLauncher.getContainerInfo(), launchContext,
         ZKClients.namespace(zkClient, getZKNamespace(runnableName)),
-        containerCount, jvmOpts, reservedMemory, getSecureStoreLocation());
+        containerCount, jvmOpts, reservedMemory, getSecureStoreLocation(), heapToReserveRatio);
 
       runningContainers.start(runnableName, processLauncher.getContainerInfo(), launcher);
 

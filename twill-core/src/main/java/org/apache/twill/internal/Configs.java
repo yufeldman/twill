@@ -32,6 +32,12 @@ public final class Configs {
     public static final String JAVA_RESERVED_MEMORY_MB = "twill.java.reserved.memory.mb";
 
     /**
+     * Configurable ratio between Heap and Reserved Memory
+     */
+    public static final String HEAP_RESERVED_MIN_RATIO_CONFIG = "twill.java.reserved.memory.ratio";
+
+
+    /**
      * Set this to false to disable the secure store updates done by default.
      */
     public static final String SECURE_STORE_UPDATE_LOCATION_ENABLED = "twill.secure.store.update.location.enabled";
@@ -46,6 +52,8 @@ public final class Configs {
   public static final class Defaults {
     // By default have 200MB reserved for Java process.
     public static final int JAVA_RESERVED_MEMORY_MB = 200;
+
+    public static final double HEAP_RESERVED_MIN_RATIO_DEFAULT = Constants.HEAP_MIN_RATIO;
 
     private Defaults() {
     }

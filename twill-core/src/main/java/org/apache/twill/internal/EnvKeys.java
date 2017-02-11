@@ -28,6 +28,7 @@ public final class EnvKeys {
   public static final String TWILL_INSTANCE_ID = "TWILL_INSTANCE_ID";
   public static final String TWILL_INSTANCE_COUNT = "TWILL_INSTANCE_COUNT";
   public static final String TWILL_RESERVED_MEMORY_MB = "TWILL_RESERVED_MEMORY_MB";
+  public static final String TWILL_HEAP_RESERVED_MIN_RATIO = "TWILL_HEAP_RESERVED_MIN_RATIO";
 
   public static final String TWILL_FS_USER = "TWILL_FS_USER";
 
